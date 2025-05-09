@@ -8,5 +8,5 @@ public class GameManager : MonoBehaviour
 { 
     static private GameManager instance;
     static public GameManager Instance {  get { return instance; } }
-    [SerializeField] private MovementScript player;
+    [SerializeField] private MovementController player;
 }
