@@ -4,6 +4,8 @@ using UnityEngine;
 public class JumpHandler : MonoBehaviour
 {
     private Rigidbody2D rb2D;
+
+    /// Jump settings
     public float Thrust = 15f;
     public float MaxHoldTime = 1f;
 
@@ -14,21 +16,21 @@ public class JumpHandler : MonoBehaviour
     private float horizontalInputBufferTime = 0.2f;
     private float horizontalInputBufferTimer = 0f;
 
-    public bool IsGrounded => isGrounded; // Expose isGrounded for other scripts
-    public float LastHorizontalInput => lastHorizontalInput; // Expose buffered input
+    public bool IsGrounded => isGrounded;
+    public float LastHorizontalInput => lastHorizontalInput;
 
-    // Dodano referencjê do GrapplingHookScript
+
     private GrapplingHookScript grapplingHookScript;
 
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
-        grapplingHookScript = GetComponent<GrapplingHookScript>(); // Pobierz referencjê do GrapplingHookScript
+        grapplingHookScript = GetComponent<GrapplingHookScript>();
     }
 
     public void HandleJump(bool jumpPressed, float horizontalInput)
     {
-        // Update horizontal input buffer
+        // Handle horizontal input buffering
         if (Mathf.Abs(horizontalInput) > 0.01f)
         {
             lastHorizontalInput = horizontalInput;
@@ -43,6 +45,7 @@ public class JumpHandler : MonoBehaviour
             }
         }
 
+        // Handle jump input
         if (jumpPressed && isGrounded)
         {
             jumpHoldTime += Time.deltaTime;
@@ -60,6 +63,7 @@ public class JumpHandler : MonoBehaviour
         }
     }
 
+    /// Perform the jump
     private void PerformJump()
     {
         float jumpStrength = (jumpHoldTime / MaxHoldTime) * Thrust;
@@ -67,7 +71,6 @@ public class JumpHandler : MonoBehaviour
         rb2D.AddForce(jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
 
-        // Wywo³aj OnJump z GrapplingHookScript
         if (grapplingHookScript != null)
         {
             grapplingHookScript.OnJump();
@@ -80,7 +83,6 @@ public class JumpHandler : MonoBehaviour
         {
             isGrounded = true;
 
-            // Wywo³aj OnLand z GrapplingHookScript
             if (grapplingHookScript != null)
             {
                 grapplingHookScript.OnLand();

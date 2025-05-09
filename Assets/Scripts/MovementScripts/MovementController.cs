@@ -16,7 +16,6 @@ public class MovementController : MonoBehaviour
 
     void Update()
     {
-        // Handle jumping
         jumpHandler.HandleJump(inputHandler.JumpPressed, inputHandler.DirectionInput.x);
 
         // Upright rotation is handled automatically in UprightRotationHandler
