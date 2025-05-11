@@ -25,6 +25,8 @@ public class GrapplingHookScript : MonoBehaviour
     private Rigidbody2D rb;
 
     private bool isAirborne = false;
+    //private float groundedBufferTime = 0f;
+    //private float maxGroundedBufferTime = 0.5f;
 
     void Start()
     {
@@ -59,12 +61,13 @@ public class GrapplingHookScript : MonoBehaviour
             ReleaseGrapplingHook(ref isLeftGrappling, leftLineRenderer);
         }
 
-        // Handle swinging for both grapples
+        // Handle swinging for the right grappling hook
         if (isRightGrappling)
         {
             SwingPlayer(rightGrapplePoint, rightLineRenderer, rightFirePoint, ref isRightGrappling);
         }
 
+        // Handle swinging for the left grappling hook
         if (isLeftGrappling)
         {
             SwingPlayer(leftGrapplePoint, leftLineRenderer, leftFirePoint, ref isLeftGrappling);

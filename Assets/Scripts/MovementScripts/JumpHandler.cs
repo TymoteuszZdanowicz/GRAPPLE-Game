@@ -16,9 +16,6 @@ public class JumpHandler : MonoBehaviour
     private float horizontalInputBufferTime = 0.2f;
     private float horizontalInputBufferTimer = 0f;
 
-    public bool IsGrounded => isGrounded;
-    public float LastHorizontalInput => lastHorizontalInput;
-
 
     private GrapplingHookScript grapplingHookScript;
 
