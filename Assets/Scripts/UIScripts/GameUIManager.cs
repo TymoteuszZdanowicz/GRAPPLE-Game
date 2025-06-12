@@ -31,12 +31,12 @@ public class GameUIManager : MonoBehaviour
 
     public void SaveGame()
     {
-
+        GameManager.Instance.SaveGame();
     }
 
     public void LoadGame()
     {
-
+        GameManager.Instance.LoadGame();
     }
 
     public void QuitToMainMenu()

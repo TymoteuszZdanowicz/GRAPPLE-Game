@@ -17,17 +17,19 @@ public class MainMenuUIManager : MonoBehaviour
 
     public void StartNewGame()
     {
-        SceneManager.LoadScene("Level1");
+        PlayerPrefs.SetInt("LoadGame", 0);
+        SceneManager.LoadScene("Level");
     }
 
     public void ContinueGame()
     {
-        SceneManager.LoadScene("Level1");
+        PlayerPrefs.SetInt("LoadGame", 1);
+        SceneManager.LoadScene("Level");
     }
 
     public void OpenOptions()
     {
-
+        
     }
 
     public void QuitGame()
