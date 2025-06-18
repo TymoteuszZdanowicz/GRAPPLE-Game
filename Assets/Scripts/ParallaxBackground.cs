@@ -7,9 +7,12 @@ public class ParallaxBackground : MonoBehaviour
     {
         public Transform layerTransform;
         public float parallaxEffectMultiplier;
+        public float startParallaxAtY = float.NegativeInfinity; // domyœlnie zawsze aktywne
     }
 
     public ParallaxLayer[] layers;
+    public Transform playerTransform; // Przypisz gracza w Inspectorze
+
     private Vector3 previousCameraPosition;
 
     void Start()
@@ -23,10 +26,13 @@ public class ParallaxBackground : MonoBehaviour
 
         foreach (var layer in layers)
         {
-            Vector3 newPosition = layer.layerTransform.position;
-            //newPosition.x += cameraDelta.x * layer.parallaxEffectMultiplier;
-            newPosition.y += cameraDelta.y * layer.parallaxEffectMultiplier;
-            layer.layerTransform.position = newPosition;
+            // SprawdŸ, czy gracz przekroczy³ próg Y dla tej warstwy
+            if (playerTransform != null && playerTransform.position.y >= layer.startParallaxAtY)
+            {
+                Vector3 newPosition = layer.layerTransform.position;
+                newPosition.y += cameraDelta.y * layer.parallaxEffectMultiplier;
+                layer.layerTransform.position = newPosition;
+            }
         }
 
         previousCameraPosition = Camera.main.transform.position;

@@ -6,7 +6,7 @@ public class GrapplingHookScript : MonoBehaviour
     public Transform rightFirePoint;
     public LineRenderer rightLineRenderer;
     public float maxGrappleDistance = 15f;
-    public float pullForce = 20f;
+    public float pullForce = 200f;
     public float swingDamping = 0.5f;
 
     [Header("Left Grapple Settings")]
@@ -95,7 +95,7 @@ public class GrapplingHookScript : MonoBehaviour
     void SwingPlayer(Vector2 grapplePoint, LineRenderer lineRenderer, Transform firePoint, ref bool isGrappling)
     {
         Vector2 directionToGrapple = (grapplePoint - (Vector2)transform.position).normalized;
-        Vector2 pullForceVector = directionToGrapple * pullForce;
+        Vector2 pullForceVector = directionToGrapple * pullForce * Time.deltaTime;
         rb.AddForce(pullForceVector);
 
         rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, swingDamping * Time.deltaTime);

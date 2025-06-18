@@ -17,7 +17,7 @@ public class CameraFollowScript : MonoBehaviour
     {
         if (player != null)
         {
-            transform.position = new Vector3(0, player.position.y + initialOffset.y, -10);
+            transform.position = new Vector3(-200, player.position.y + initialOffset.y, -10);
             transform.rotation = Quaternion.identity;
         }
     }
