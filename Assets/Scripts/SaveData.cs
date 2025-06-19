@@ -5,5 +5,5 @@ public class SaveData
 {
     public float playerPosX;
     public float playerPosY;
-    // Add more stuff later
+    public float playerTime;
 }

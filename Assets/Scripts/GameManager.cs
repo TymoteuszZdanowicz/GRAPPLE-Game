@@ -1,16 +1,23 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     static private GameManager instance;
     static public GameManager Instance { get { return instance; } }
     [SerializeField] private MovementController player;
-    [SerializeField] private Vector3 startPosition = new Vector3(0, 0, 0); // Mo¿esz ustawiæ w Inspectorze
+    [SerializeField] private Vector3 startPosition = new Vector3(0, 0, 0);
+    [SerializeField] private TextMeshProUGUI playerTimeText;
+    [SerializeField] private GameObject endPanel;
+    [SerializeField] private TextMeshProUGUI finalTimeText;
 
     private string savePath => Application.persistentDataPath + "/save.dat";
     private bool isGameEnded = false;
+    public bool IsGameEnded => isGameEnded;
+    private float playerTime = 0f;
 
     void Start()
     {
@@ -19,6 +26,9 @@ public class GameManager : MonoBehaviour
             LoadGame();
         else
             NewGame();
+
+        if (endPanel != null)
+            endPanel.SetActive(false);
     }
 
     void Awake()
@@ -29,9 +39,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!isGameEnded && player != null && player.transform.position.y > 220f)
+        if (!isGameEnded)
         {
-            EndGame();
+            playerTime += Time.deltaTime;
+            if (playerTimeText != null)
+                playerTimeText.text = $"Time: {playerTime:F2}s";
+
+            if (player != null && player.transform.position.y > 218f)
+            {
+                EndGame();
+            }
         }
     }
 
@@ -40,6 +57,7 @@ public class GameManager : MonoBehaviour
         SaveData data = new SaveData();
         data.playerPosX = player.transform.position.x;
         data.playerPosY = player.transform.position.y;
+        data.playerTime = playerTime;
 
         BinaryFormatter bf = new BinaryFormatter();
         using (FileStream file = File.Create(savePath))
@@ -57,6 +75,7 @@ public class GameManager : MonoBehaviour
         {
             SaveData data = (SaveData)bf.Deserialize(file);
             player.transform.position = new Vector3(data.playerPosX, data.playerPosY, player.transform.position.z);
+            playerTime = data.playerTime;
         }
     }
 
@@ -71,6 +90,21 @@ public class GameManager : MonoBehaviour
     {
         isGameEnded = true;
         Time.timeScale = 0f;
-        Debug.Log("Koniec gry! Gracz przekroczy³ Y=225.");
+        Debug.Log("Koniec gry! Gracz przekroczy³ Y=218.");
+
+        if (endPanel != null)
+            endPanel.SetActive(true);
+        if (finalTimeText != null)
+            finalTimeText.text = $"Your time: {playerTime:F2}s";
+
+        float bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue);
+        if (playerTime < bestTime)
+            PlayerPrefs.SetFloat("BestTime", playerTime);
+
+        string times = PlayerPrefs.GetString("Times", "");
+        times += $"{playerTime:F2};";
+        PlayerPrefs.SetString("Times", times);
+        PlayerPrefs.Save();
     }
+
 }

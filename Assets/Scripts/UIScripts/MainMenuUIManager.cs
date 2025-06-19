@@ -5,7 +5,11 @@ using UnityEngine.SceneManagement;
 public class MainMenuUIManager : MonoBehaviour
 {
     public GameObject mainMenuPanel;
+    public GameObject optionsPanel;
     public Button continueButton;
+    public Button optionsButton;
+
+    private OptionsPanelManager optionsPanelManager;
 
     void Start()
     {
@@ -13,6 +17,9 @@ public class MainMenuUIManager : MonoBehaviour
             continueButton.interactable = false;
 
         mainMenuPanel.SetActive(true);
+
+        if (optionsPanel != null)
+            optionsPanelManager = optionsPanel.GetComponent < OptionsPanelManager >();
     }
 
     public void StartNewGame()
@@ -29,7 +36,20 @@ public class MainMenuUIManager : MonoBehaviour
 
     public void OpenOptions()
     {
-        
+        if (optionsPanelManager != null)
+        {
+            mainMenuPanel.SetActive(false);
+            optionsPanelManager.OpenOptions();
+        }
+    }
+
+    public void CloseOptions()
+    {
+        if (optionsPanelManager != null)
+        {
+            optionsPanelManager.CloseOptions();
+            mainMenuPanel.SetActive(true);
+        }
     }
 
     public void QuitGame()
