@@ -2250,7 +2250,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -149.29332, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -11224,7 +11224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5628286432557328165, guid: 5d3294df18dd9b842a379f8ab859edb4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.036
+      value: 0.116
       objectReference: {fileID: 0}
     - target: {fileID: 5780610170102353397, guid: 5d3294df18dd9b842a379f8ab859edb4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11240,7 +11240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9136036861546850861, guid: 5d3294df18dd9b842a379f8ab859edb4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.113
+      value: -0.116
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

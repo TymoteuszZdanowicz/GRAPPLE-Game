@@ -1,80 +1,81 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles grappling hook mechanics for both left and right hooks.
+/// </summary>
 public class GrapplingHookScript : MonoBehaviour
 {
     [Header("Right Grapple Settings")]
-    public Transform rightFirePoint;
-    public LineRenderer rightLineRenderer;
-    public float maxGrappleDistance = 15f;
-    public float pullForce = 200f;
-    public float swingDamping = 0.5f;
+    public Transform rightFirePoint;           // Fire point for right hook
+    public LineRenderer rightLineRenderer;     // Line renderer for right hook
 
     [Header("Left Grapple Settings")]
-    public Transform leftFirePoint;
-    public LineRenderer leftLineRenderer;
+    public Transform leftFirePoint;            // Fire point for left hook
+    public LineRenderer leftLineRenderer;      // Line renderer for left hook
 
     [Header("Grapple Layer")]
-    public LayerMask grappleLayer;
+    public LayerMask grappleLayer;             // Layer mask for grapple targets
 
-    private Vector2 rightGrapplePoint;
-    private Vector2 leftGrapplePoint;
-    private bool isRightGrappling = false;
-    private bool isLeftGrappling = false;
-    private bool hasRightGrappled = false;
-    private bool hasLeftGrappled = false;
-    private Rigidbody2D rb;
+    public float maxGrappleDistance = 15f;     // Max grapple distance
+    public float pullForce = 200f;             // Force pulling player to grapple
+    public float swingDamping = 0.5f;          // Damping for swinging motion
 
-    private bool isAirborne = false;
-    //private float groundedBufferTime = 0f;
-    //private float maxGroundedBufferTime = 0.5f;
+    private Vector2 rightGrapplePoint;         // Target point for right hook
+    private Vector2 leftGrapplePoint;          // Target point for left hook
+    private bool isRightGrappling = false;     // Is right hook active
+    private bool isLeftGrappling = false;      // Is left hook active
+    private bool hasRightGrappled = false;     // Has right hook been fired
+    private bool hasLeftGrappled = false;      // Has left hook been fired
+    private Rigidbody2D rb;                    // Player Rigidbody2D
 
+    private bool isAirborne = false;           // Is player airborne
+
+    // Initialize Rigidbody2D reference
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    // Handles input for firing and releasing grappling hooks
     void Update()
     {
-        // Fire the right grappling hook
+        if (Time.timeScale == 0f)
+            return;
+
         if (Input.GetMouseButtonDown(1) && !hasRightGrappled)
         {
             FireGrapplingHook(rightFirePoint, ref rightGrapplePoint, ref isRightGrappling, rightLineRenderer);
             hasRightGrappled = true;
         }
-
-        // Fire the left grappling hook
         if (Input.GetMouseButtonDown(0) && !hasLeftGrappled)
         {
             FireGrapplingHook(leftFirePoint, ref leftGrapplePoint, ref isLeftGrappling, leftLineRenderer);
             hasLeftGrappled = true;
         }
-
-        // Release the right grappling hook
         if (Input.GetMouseButtonUp(1))
         {
             ReleaseGrapplingHook(ref isRightGrappling, rightLineRenderer);
         }
-
-        // Release the left grappling hook
         if (Input.GetMouseButtonUp(0))
         {
             ReleaseGrapplingHook(ref isLeftGrappling, leftLineRenderer);
         }
+    }
 
-        // Handle swinging for the right grappling hook
+    // Handles physics-based swinging for active grappling hooks
+    void FixedUpdate()
+    {
         if (isRightGrappling)
         {
             SwingPlayer(rightGrapplePoint, rightLineRenderer, rightFirePoint, ref isRightGrappling);
         }
-
-        // Handle swinging for the left grappling hook
         if (isLeftGrappling)
         {
             SwingPlayer(leftGrapplePoint, leftLineRenderer, leftFirePoint, ref isLeftGrappling);
         }
     }
 
-
+    // Fires a grappling hook towards the mouse position
     void FireGrapplingHook(Transform firePoint, ref Vector2 grapplePoint, ref bool isGrappling, LineRenderer lineRenderer)
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -92,6 +93,7 @@ public class GrapplingHookScript : MonoBehaviour
         }
     }
 
+    // Applies force to swing the player towards the grapple point
     void SwingPlayer(Vector2 grapplePoint, LineRenderer lineRenderer, Transform firePoint, ref bool isGrappling)
     {
         Vector2 directionToGrapple = (grapplePoint - (Vector2)transform.position).normalized;
@@ -109,24 +111,28 @@ public class GrapplingHookScript : MonoBehaviour
         }
     }
 
+    // Releases the grappling hook and hides the line
     void ReleaseGrapplingHook(ref bool isGrappling, LineRenderer lineRenderer)
     {
         isGrappling = false;
         lineRenderer.positionCount = 0;
     }
 
+    // Resets grapple usage flags (for both hooks)
     public void ResetGrappleUsage()
     {
         hasRightGrappled = false;
         hasLeftGrappled = false;
     }
 
+    // Called when player lands, resets airborne and grapple usage
     public void OnLand()
     {
         isAirborne = false;
         ResetGrappleUsage();
     }
 
+    // Called when player jumps, sets airborne state
     public void OnJump()
     {
         isAirborne = true;

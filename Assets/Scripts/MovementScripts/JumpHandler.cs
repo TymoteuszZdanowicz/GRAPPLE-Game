@@ -1,30 +1,34 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles jumping logic, including jump buffering and interaction with grappling hook.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class JumpHandler : MonoBehaviour
 {
-    private Rigidbody2D rb2D;
+    private Rigidbody2D rb2D;                  // Reference to Rigidbody2D
 
-    /// Jump settings
-    public float Thrust = 15f;
-    public float MaxHoldTime = 1f;
+    // Jump settings
+    public float Thrust = 15f;                 // Jump force
+    public float MaxHoldTime = 1f;             // Max time jump can be held
 
-    private float jumpHoldTime = 0f;
-    private bool isGrounded = true;
+    private float jumpHoldTime = 0f;           // Current jump hold time
+    private bool isGrounded = true;            // Is player on the ground
 
-    private float lastHorizontalInput = 0f;
-    private float horizontalInputBufferTime = 0.2f;
-    private float horizontalInputBufferTimer = 0f;
+    private float lastHorizontalInput = 0f;    // Last horizontal input for jump direction
+    private float horizontalInputBufferTime = 0.2f; // Buffer time for horizontal input
+    private float horizontalInputBufferTimer = 0f;  // Timer for input buffering
 
+    private GrapplingHookScript grapplingHookScript; // Reference to grappling hook
 
-    private GrapplingHookScript grapplingHookScript;
-
+    // Initialize references
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         grapplingHookScript = GetComponent<GrapplingHookScript>();
     }
 
+    // Handles jump input and buffering.
     public void HandleJump(bool jumpPressed, float horizontalInput)
     {
         // Handle horizontal input buffering
@@ -60,7 +64,7 @@ public class JumpHandler : MonoBehaviour
         }
     }
 
-    /// Perform the jump
+    // Performs the jump and notifies grappling hook.
     private void PerformJump()
     {
         float jumpStrength = (jumpHoldTime / MaxHoldTime) * Thrust;
@@ -74,6 +78,7 @@ public class JumpHandler : MonoBehaviour
         }
     }
 
+    // Detects landing and notifies grappling hook
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

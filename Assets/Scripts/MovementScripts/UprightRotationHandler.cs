@@ -1,22 +1,27 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Handles automatic upright rotation and small jump if the player is not upright.
+/// </summary>
 public class UprightRotationHandler : MonoBehaviour
 {
-    private Rigidbody2D rb2D;
-    public float UprightThreshold = 1f;
-    public float UprightRotationThreshold = 5f;
-    public float SmallJumpForce = 5f;
-    public float RotationSpeed = 200f;
+    private Rigidbody2D rb2D;                  // Reference to Rigidbody2D
+    public float UprightThreshold = 1f;        // Time before checking upright
+    public float UprightRotationThreshold = 5f;// Allowed angle from upright (degrees)
+    public float SmallJumpForce = 5f;          // Force applied for small jump
+    public float RotationSpeed = 200f;         // Speed of upright rotation
 
-    private float uprightCheckTimer = 0f;
-    private bool isRotatingToUpright = false;
+    private float uprightCheckTimer = 0f;      // Timer for upright check
+    private bool isRotatingToUpright = false;  // Is currently rotating to upright
 
+    // Initialize Rigidbody2D reference
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
     }
 
+    // Checks if player should be rotated upright
     void Update()
     {
         if (rb2D.linearVelocity.magnitude < 0.1f && !isRotatingToUpright)
@@ -34,6 +39,7 @@ public class UprightRotationHandler : MonoBehaviour
         }
     }
 
+    // Performs a small jump and rotates the player upright
     private IEnumerator PerformUprightJump()
     {
         isRotatingToUpright = true;
@@ -54,6 +60,7 @@ public class UprightRotationHandler : MonoBehaviour
         isRotatingToUpright = false;
     }
 
+    // Checks if the player is upright within the allowed threshold
     private bool IsUpright()
     {
         float zRotation = transform.rotation.eulerAngles.z;

@@ -2,15 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Handles main menu logic, including new game, continue, options, and quit actions.
+/// </summary>
 public class MainMenuUIManager : MonoBehaviour
 {
-    public GameObject mainMenuPanel;
-    public GameObject optionsPanel;
-    public Button continueButton;
-    public Button optionsButton;
+    public GameObject mainMenuPanel;         // Reference to the main menu panel
+    public GameObject optionsPanel;          // Reference to the options panel
+    public Button continueButton;            // Continue game button
+    public Button optionsButton;             // Options button
 
-    private OptionsPanelManager optionsPanelManager;
+    private OptionsPanelManager optionsPanelManager; // Reference to options panel manager
 
+    // Initializes menu and checks for save file
     void Start()
     {
         if (!SaveExists())
@@ -19,21 +23,24 @@ public class MainMenuUIManager : MonoBehaviour
         mainMenuPanel.SetActive(true);
 
         if (optionsPanel != null)
-            optionsPanelManager = optionsPanel.GetComponent < OptionsPanelManager >();
+            optionsPanelManager = optionsPanel.GetComponent<OptionsPanelManager>();
     }
 
+    // Starts a new game and loads the level scene
     public void StartNewGame()
     {
         PlayerPrefs.SetInt("LoadGame", 0);
         SceneManager.LoadScene("Level");
     }
 
+    // Continues a saved game and loads the level scene
     public void ContinueGame()
     {
         PlayerPrefs.SetInt("LoadGame", 1);
         SceneManager.LoadScene("Level");
     }
 
+    // Opens the options panel and hides the main menu
     public void OpenOptions()
     {
         if (optionsPanelManager != null)
@@ -43,6 +50,7 @@ public class MainMenuUIManager : MonoBehaviour
         }
     }
 
+    // Closes the options panel and shows the main menu
     public void CloseOptions()
     {
         if (optionsPanelManager != null)
@@ -52,11 +60,13 @@ public class MainMenuUIManager : MonoBehaviour
         }
     }
 
+    // Quits the application
     public void QuitGame()
     {
         Application.Quit();
     }
 
+    // Checks if a save file exists
     private bool SaveExists()
     {
         return System.IO.File.Exists(Application.persistentDataPath + "/save.dat");

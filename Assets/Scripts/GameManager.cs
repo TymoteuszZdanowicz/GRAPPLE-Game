@@ -6,19 +6,23 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // Singleton instance
     static private GameManager instance;
     static public GameManager Instance { get { return instance; } }
-    [SerializeField] private MovementController player;
-    [SerializeField] private Vector3 startPosition = new Vector3(0, 0, 0);
-    [SerializeField] private TextMeshProUGUI playerTimeText;
-    [SerializeField] private GameObject endPanel;
-    [SerializeField] private TextMeshProUGUI finalTimeText;
 
-    private string savePath => Application.persistentDataPath + "/save.dat";
-    private bool isGameEnded = false;
-    public bool IsGameEnded => isGameEnded;
-    private float playerTime = 0f;
+    [SerializeField] private MovementController player; // Reference to player controller
+    [SerializeField] private Vector3 startPosition; // Player start position
+    [SerializeField] private TextMeshProUGUI playerTimeText; // UI text for in-game timer
+    [SerializeField] private GameObject endPanel; // End game panel
+    [SerializeField] private TextMeshProUGUI finalTimeText; // UI text for final time
 
+    private string savePath => Application.persistentDataPath + "/save.dat"; // Save file path
+    private bool isGameEnded = false; // Game end state
+    public bool IsGameEnded => isGameEnded; // Public getter for end state
+    private bool showTime = true; // Should show timer
+    private float playerTime = 0f; // Player's current time
+
+    // Called on game start, loads or starts new game
     void Start()
     {
         int loadGame = PlayerPrefs.GetInt("LoadGame", 0);
@@ -29,14 +33,19 @@ public class GameManager : MonoBehaviour
 
         if (endPanel != null)
             endPanel.SetActive(false);
+
+        bool showTimePref = PlayerPrefs.GetInt("ShowTime", 1) == 1;
+        SetShowTime(showTimePref);
     }
 
+    // Ensures singleton instance
     void Awake()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
     }
 
+    // Updates timer and checks for end condition
     void Update()
     {
         if (!isGameEnded)
@@ -52,6 +61,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Saves player position and time to file
     public void SaveGame()
     {
         SaveData data = new SaveData();
@@ -66,6 +76,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Loads player position and time from file
     public void LoadGame()
     {
         if (!File.Exists(savePath)) return;
@@ -79,6 +90,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Starts a new game and resets player position
     public void NewGame()
     {
         player.transform.position = startPosition;
@@ -86,6 +98,7 @@ public class GameManager : MonoBehaviour
             File.Delete(savePath);
     }
 
+    // Handles end of game logic, shows end panel and saves time
     private void EndGame()
     {
         isGameEnded = true;
@@ -107,4 +120,11 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    // Sets visibility of the in-game timer
+    public void SetShowTime(bool value)
+    {
+        showTime = value;
+        if (playerTimeText != null)
+            playerTimeText.gameObject.SetActive(showTime);
+    }
 }
